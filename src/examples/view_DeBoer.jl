@@ -33,7 +33,7 @@ $(@bind N NumberField(1:1000, default = 100))
 """
 
 # ╔═╡ 232d91d8-01b6-11eb-08d6-3343be95b77f
-S, D, I, T, ρ = predict!(model, N, burnIn = 200);
+S, D, I, T, ρ = predict!(model, N, burnIn = 100);
 
 # ╔═╡ b19bf544-b153-41a0-a013-992da6cdd0cd
 md"""
@@ -64,22 +64,24 @@ md"
 # ╔═╡ 53b158a2-6bbb-11eb-0fa7-87390c33cb64
 begin
 	model_phe = DeBoerModel(a0 = 9, A = 1,  noiseI = Normal(0, 25), noiseS = Normal(0, 2))
-	# pre
-	Npre = 100
-	S1,D1,I1,T1,R1 = predict!(model_phe, Npre, burnIn = 500)
+	# pre-injection
+	Npre = 50
+	S1,D1,I1,T1,R1 = predict!(model_phe, Npre, burnIn = 100)
 	
 	# injection
 	S2,D2,I2,T2,R2 = phenylephrine(model_phe, 1000, 10)
 	
-	# post
-	Npost = 20
-	S3,D3,I3,T3,R3 = predict!(model_phe, Npost, burnIn = 200)
+	# post-injection
+	Npost = 10 # length of plateau
+	S3,D3,I3,T3,R3 = predict!(model_phe, Npost, burnIn = 0)
 	
-	#plot([S1; S2; S3], lab = "", title = "BP", ylab = "mmHg", color = :red)
-	#pBP = plot!([D1; D2; D3], lab = "", color = :red)
-	#pIBI = plot([I1; I2; I3], lab = "", ylab = "ms", title = "RR Interval")
-	#plot(pBP, pIBI, layout = (2,1))
-	#vline!([Npre Npre], color = :black, lab = "")
+	S4,D4,I4,T4,R4 = phenylephrine(model_phe, -1000, 10)
+	
+	plot([S1; S2; S3; S4], lab = "", title = "BP", ylab = "mmHg", color = :red)
+	pBP = plot!([D1; D2; D3; D4], lab = "", color = :green)
+	pIBI = plot([I1; I2; I3; I4], lab = "", ylab = "ms", title = "I", color = :blue)
+	plot(pBP, pIBI, layout = (2,1))
+	vline!([Npre Npre], color = :black, lab = "")
 end
 
 # ╔═╡ b312bc92-6bbf-11eb-131e-c946cf3eb23f
@@ -89,15 +91,6 @@ begin
 	scatter(S2 .- minimum(S2), I2 .- minimum(I2), lab = "")
 	plot!(xbp, yms, color = :black, lab = "BRS 9 ms/mmHg", ylab = "ms", xlab = "mmHg")
 end
-
-# ╔═╡ 2dba5f40-6c47-11eb-3b29-47da9597609f
-begin
-	modelf = DeBoerModel()
-	f, gain, phase, A = BRSf(modelf)
-	plot(f, gain, lab = "", xlab = "f [c/b]", ylab = "BRS [ms/mmHg]", ylims = [0,18])
-	res = hline!([mean(gain)], color  =  :black, lab = "mean BRS: $(round(mean(gain), digits = 2)) ms/mmHg")
-end
-
 
 # ╔═╡ Cell order:
 # ╠═5c3096b0-01b6-11eb-2c01-5ba0aac27b70
@@ -110,4 +103,3 @@ end
 # ╟─ac3a7eac-6bba-11eb-37ec-49854b22053f
 # ╠═53b158a2-6bbb-11eb-0fa7-87390c33cb64
 # ╠═b312bc92-6bbf-11eb-131e-c946cf3eb23f
-# ╠═2dba5f40-6c47-11eb-3b29-47da9597609f
