@@ -1,5 +1,36 @@
 # Implementation of Karemakers adaption of the DeBoer Model
+"""
+    KaremakerModel()
 
+A simple structure that stores a Karemaker-model. 
+
+The default initialization was taken from the original paper. When constructiong the model, single properties can be defined as keyword arguments. 
+
+# Examples
+```julia
+julia> model = KaremakerModel()
+KaremakerModel
+  c: Float64 350.0
+  magn_int: Float64 10.0
+  r_int: Distributions.Normal{Float64}
+  A_resp: Float64 60.0
+  T_resp: Float64 3000.0
+  a1: Float64 9.0
+  a2: Float64 9.0
+  b_I: Float64 0.125
+  b_D: Float64 0.125
+  b_P: Float64 0.125
+  Dref: Float64 80.0
+  t_runoff: Float64 2000.0
+  offset: Float64 10.0
+  starling: Float64 0.016
+  magn_pulse: Float64 2.0
+  A_BP: Float64 3.0
+  w: Array{Float64}((6,)) [0.0, 0.01, 0.03, 0.03, 0.015, 0.005]
+  symp_set: Float64 0.5
+  symp_add: Array{Float64}((2,)) [-0.05, 0.2]
+```
+"""
 @with_kw mutable struct KaremakerModel
     c::Float64 = 350 # ms
     magn_int::Float64 = 10 # ms
@@ -32,6 +63,17 @@
     symp_add = [-0.05, 0.2]
 end
 
+"""
+    predict(model::DeBoerModel, n::Int; burnIn::Int = 0) 
+
+Predicts 'N' values of the cardiovascular variables for the respective model. With 'burnIn' a certain number af values can be dropped in the beginning.
+    
+# Examples
+```julia
+ julia> S, D, P, I, Symp ρ = predict(model, 100)  
+ (S = [...], D = [...], P = [...], I = [...], Symp = [...], ρ = [...])   
+ ```
+ """
 function predict(model::KaremakerModel, n::Int; burnIn::Int = 50)
     t = Vector{Float64}(undef, n + burnIn)
     trm = Vector{Float64}(undef, n + burnIn)
@@ -85,8 +127,9 @@ function predict(model::KaremakerModel, n::Int; burnIn::Int = 50)
             SympD[i] = model.Dref - D[i] 
         end
     end
+    ρ = model.A_resp .* sin.((2π .* t) ./ model.T_resp .+ 1.5π)
+    return ( S = S[burnIn+1:end], D = D[burnIn+1:end], P = P[burnIn+1:end], I = I[burnIn+1:end], Symp = Symp[burnIn+1:end], ρ = ρ[burnIn+1:end])# , SympD = SympD[burnIn+1:end])
     # return (I = I[burnIn+1:end], S = S[burnIn+1:end], D = D[burnIn+1:end], Symp = Symp[burnIn+1:end])
-    return (I = I[burnIn+1:end], S = S[burnIn+1:end], D = D[burnIn+1:end], Symp = Symp[burnIn+1:end], SympD = SympD[burnIn+1:end], P = P[burnIn+1:end])
 end
 
 

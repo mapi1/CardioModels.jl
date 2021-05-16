@@ -3,6 +3,43 @@
 # include(joinpath(pwd(), "Tools/util.jl"))
 # include(joinpath(pwd(), "Tools/tf2spec.jl"))
 
+"""
+    DeBoerModel()
+
+A simple structure that stores a DeBoer-model. 
+
+The default initialization was taken from the original paper. When constructiong the model, single properties can be defined as keyword arguments. 
+The model has a state, if it was already used in `predict!`, otherwise a default is provided in `predict` or `predict!`.
+
+# Examples
+```julia
+julia> model = DeBoerModel()
+DeBoerModel
+  a0: Int64 9
+  ak: Array{Int64}((6,)) [0, 1, 2, 3, 2, 1]
+  c1: Int64 -1360
+  bk: Array{Int64}((6,)) [0, 2, 4, 6, 4, 2]
+  TStar: Int64 3585
+  γ: Float64 0.016
+  c2: Float64 32.2
+  c3: Float64 1.0957070684897647
+  A: Int64 3
+  fresp: Float64 0.3
+  resp: #30 (function of type Main.CardioModels.var"#30#36"{Int64, Float64})
+  noiseI: Distributions.Normal{Float64}
+  noiseS: Distributions.Normal{Float64}
+  operationPoint: Int64 120
+  F: #31 (function of type Main.CardioModels.var"#31#37"{Int64})
+  hasState: Bool false
+  S: Nothing nothing
+  Seff: Nothing nothing
+  D: Nothing nothing
+  I: Nothing nothing
+  T: Nothing nothing
+  ρ: Nothing nothing
+  time: Int64 0
+```
+"""
 @with_kw mutable struct DeBoerModel
     # Gains for RR from Seff
     a0::Real = 9 # vagus (fast) ms/mmHG
@@ -34,12 +71,22 @@
     D::Union{Nothing, Vector{<:Real}} = nothing
     I::Union{Nothing, Vector{<:Real}} = nothing
     T::Union{Nothing, Vector{<:Real}} = nothing
-    R::Union{Nothing, Vector{<:Real}} = nothing
+    ρ::Union{Nothing, Vector{<:Real}} = nothing
     time::Real = 0
 end
 
-# Statefull predict function
-function predict!(model::DeBoerModel, n::Int; burnIn::Int = 0)
+"""
+    predict(model::DeBoerModel, n::Int; burnIn::Int = 0) 
+
+Predicts 'N' values of the cardiovascular variables for the respective model. With 'burnIn' a certain number af values can be dropped in the beginning.
+    
+# Examples
+```julia
+ julia> S, D, I, T, ρ = predict(model, 100)  
+ (S = [...], D = [...], I = [...], T = [...], ρ = [...])   
+ ```
+ """
+function predict(model::DeBoerModel, n::Int; burnIn::Int = 0)
     burnIn >= 0 || throw(DomainError(burnIn, "Burn in needs to >= 0"))
     n > 0 || throw(DomainError(n, "You need to predict at least one beat"))
 
@@ -53,7 +100,7 @@ function predict!(model::DeBoerModel, n::Int; burnIn::Int = 0)
         D = append!(model.D, Vector{Real}(undef, n + burnIn))
         I = append!(model.I, Vector{Real}(undef, n + burnIn))
         T = append!(model.T, Vector{Real}(undef, n + burnIn))
-        R = append!(model.R, Vector{Real}(undef, n + burnIn))
+        ρ = append!(model.ρ, Vector{Real}(undef, n + burnIn))
         time = model.time
         burnIn += history
     else
@@ -67,7 +114,7 @@ function predict!(model::DeBoerModel, n::Int; burnIn::Int = 0)
         D = Vector{Real}(undef, n + burnIn)
         I = Vector{Real}(undef, n + burnIn)
         T = Vector{Real}(undef, n + burnIn)
-        R = Vector{Real}(undef, n + burnIn)
+        ρ = Vector{Real}(undef, n + burnIn)
         time = 0
         # fill in starting data
         for i in 1:history
@@ -83,24 +130,52 @@ function predict!(model::DeBoerModel, n::Int; burnIn::Int = 0)
     for i in history+1:n+burnIn
         time += I[i-1]
         D[i] = model.c3 * S[i-1] * exp(-I[i-1]/T[i-1])
-        R[i] = model.resp(time)
-        S[i] = D[i] + model.γ * I[i-1] + model.c2 + R[i] + rand(model.noiseS)
+        ρ[i] = model.resp(time)
+        S[i] = D[i] + model.γ * I[i-1] + model.c2 + ρ[i] + rand(model.noiseS)
         Seff[i] = model.F(S[i])
         I[i] = model.c1 + model.a0 * Seff[i] + sum(model.ak .* reverse(Seff[i-(lena-1):i-1])) + rand(model.noiseI)
         T[i] = model.TStar - sum(model.bk .* reverse(Seff[i-lenb:i-1]))
     end
+    return (S = S[burnIn+1:end], D = D[burnIn+1:end], I = I[burnIn+1:end], T = T[burnIn+1:end], ρ = ρ[burnIn+1:end])
+end
 
+# Statefull predict function
+"""
+    predict(model::DeBoerModel, n::Int; burnIn::Int = 0) 
+
+Predicts 'N' values of the cardiovascular variables for the respective model and updates its state. With 'burnIn' a certain number af values can be dropped in the beginning.
+    
+# Examples
+```julia
+ julia> S, D, I, T, ρ = predict(model, 100) 
+ (S = [...], D = [...], I = [...], T = [...], ρ = [...]) 
+ julia> model.hasState
+ true   
+ ```
+ """
+function predict!(model::DeBoerModel, n::Int; burnIn::Int = 0)
+    S, D, I, T, ρ = predict(model, n + burnIn; burnIn = 0)
+
+    lena = length(model.ak) + 1
+    lenb = length(model.bk)
+    history = max(lena, lenb)
+
+    if n >= history
     # update / shorten  state
     model.hasState = true
     model.S = S[end-history+1:end]
-    model.Seff = Seff[end-history+1:end]
+    model.Seff = model.F(model.S)
     model.D = D[end-history+1:end]
     model.I = I[end-history+1:end]
     model.T = T[end-history+1:end]
-    model.R = R[end-history+1:end]
-    model.time = time
+    model.ρ = ρ[end-history+1:end]
+    model.time += sum(I)
+    else
+        @warn "n was to short to update a valid state, it remains unchanged."
+    end
 
-    return (S = S[burnIn+1:end], D = D[burnIn+1:end], I = I[burnIn+1:end], T = T[burnIn+1:end], R = R[burnIn+1:end])
+    return (S = S[burnIn+1:end], D = D[burnIn+1:end], I = I[burnIn+1:end], T = T[burnIn+1:end], ρ = ρ[burnIn+1:end])
+
 end
 
 # simulates a phenylephrine injection by increaing the peripheral resistance over a defined time 
@@ -112,7 +187,7 @@ function phenylephrine(model::DeBoerModel, TStar_increase::Real, n_increase::Int
     D = Vector{Float64}(undef, n_increase)
     I = Vector{Float64}(undef, n_increase)
     T = Vector{Float64}(undef, n_increase)
-    R = Vector{Float64}(undef, n_increase)
+    ρ = Vector{Float64}(undef, n_increase)
     for i in 1:n_increase
         model.TStar += TStar_step
         res = predict!(model, 1)
@@ -120,9 +195,9 @@ function phenylephrine(model::DeBoerModel, TStar_increase::Real, n_increase::Int
         D[i] = res[:D][1]
         I[i] = res[:I][1]
         T[i] = res[:T][1]
-        R[i] = res[:R][1] 
+        ρ[i] = res[:ρ][1] 
     end
-    return (S = S, D = D, I = I, T = T, R = R)
+    return (S = S, D = D, I = I, T = T, ρ = ρ)
 end
 
 function BRSf(model::DeBoerModel)

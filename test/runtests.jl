@@ -1,4 +1,4 @@
-using Main.CardioModels
+using CardioModels
 using Test
 
 
@@ -10,13 +10,20 @@ N = 100
     result = predict(model, N)
     @test length(result) == 3
     @test length(result[1]) == N
+
+    model_est = fitBaselli(result...)
+    @test typeof(model_est) == BaselliModel
 end
 
 @testset "DeBoer" begin
     model = DeBoerModel()
-    result = predict!(model, N)
+    result = predict(model, N)
     @test length(result) == 5
     @test length(result[1]) == N
+
+    result = predict!(model, N)
+    @test model.hasState
+
 end
 
 @testset "Karemaker" begin

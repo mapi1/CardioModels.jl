@@ -8,7 +8,7 @@ function fitBaselli(S::Vector{<:Real}, I::Vector{<:Real}, ρ::Vector{<:Real};
      maxiter::Int = 10,
      δmin::Real = 0.001,
      verbose::Bool = false,
-     λ::Union{Vector{<:Real}, Real} = 0,
+     estimator = \,
      stochastic::Bool = false)
     
      # Check arguments
@@ -31,25 +31,26 @@ function fitBaselli(S::Vector{<:Real}, I::Vector{<:Real}, ρ::Vector{<:Real};
     
     # Estimate Transfer Functions using generalized least squares, either the maximum likelihood version or repeated arxar 
     # ARXXAR
-    # Gs, Ds, errs, residual_s = gls(ds, na, [1, nb], nd, δmin = δmin, maxiter = maxiter, errorAndResidual = true, verbose = verbose, estimator = estimator,  λ = λ)
-    Gs, Ds, residual_s = arxar(ds, na, [1, nb], nd, δmin = δmin, iterations = maxiter, verbose = verbose, estimator = estimator,  λ = λ, stochastic = stochastic)
+    # Gs, DS, errs, residual_s = gls(ds, na, [1, nb], nd, δmin = δmin, maxiter = maxiter, errorAndResidual = true, verbose = verbose, estimator = estimator,  λ = λ)
+    Gs, DS, residual_s = arxar(ds, na, [1, nb], nd, δmin = δmin, iterations = maxiter, verbose = verbose, estimator = estimator, stochastic = stochastic)
 
     # XXAR - na = 0 
-    # Gt, Dt, errt, residual_t = gls(dt, 0, [nb, nb], nd, direct = [true, false], δmin = δmin, maxiter = maxiter, errorAndResidual = true, verbose = verbose, estimator = estimator,  λ = λ)
-    Gt, Dt, residual_t = arxar(dt, 0, [nb, nb], nd, inputdelay = [0, 1], δmin = δmin, iterations = maxiter, verbose = verbose, estimator = estimator,  λ = λ, stochastic = stochastic)
+    # Gt, DI, errt, residual_t = gls(dt, 0, [nb, nb], nd, direct = [true, false], δmin = δmin, maxiter = maxiter, errorAndResidual = true, verbose = verbose, estimator = estimator,  λ = λ)
+    Gt, DI, residual_t = arxar(dt, 0, [nb, nb], nd, inputdelay = [0, 1], δmin = δmin, iterations = maxiter, verbose = verbose, estimator = estimator, stochastic = stochastic)
 
     # Extract model
     # G = G_SI / (1 - G_SS) with a priori knowledge gSI(1) = g(1) gives G_SI and G_SS
+    G = Gs[1,1]
     gSI = vec(impulse(G,1)[1]')
     G_SI = impRes2tf(gSI)
     G_SS = ControlSystems.robust_minreal(-(G_SI / G) + 1)
     R1 = Gs[1,2]
     R_Sρ = ControlSystems.robust_minreal(R1 * (1 - G_SS))
-    MS = ControlSystems.robust_minreal(Ds * (1 - G_SS))
+    MS = ControlSystems.robust_minreal(DS * (1 - G_SS))
     
     G_IS = Gt[1,1]
     R_Iρ = Gt[1,2]
-    MI = Dt
+    MI = DI
     
     # Fit AR model representing respiration
     arCoeffs, errr = lpc(ρ, nd)
@@ -60,9 +61,9 @@ function fitBaselli(S::Vector{<:Real}, I::Vector{<:Real}, ρ::Vector{<:Real};
     pS_anderson = pvalue(OneSampleADTest(residual_s, Normal(mean(residual_s), std(residual_s))))
     pI_anderson = pvalue(OneSampleADTest(residual_t, Normal(mean(residual_t), std(residual_t))))
     
-    # res = BaselliModel(G_SI = G_SI, G_IS = G_IS, G_SS = G_SS, MS = MS, MI = MI, Mρ = Mρ, R_Sρ = R_Sρ, R_Iρ = R_Iρ, wS = Normal(0, sqrt(errs)), wI = Normal(0, sqrt(errt)), wρ = Normal(0, sqrt(errr)), n = na, N = N, pS_anderson = pS_anderson, pI_anderson = pI_anderson, res_S = residual_s, res_I = residual_t, Gs = Gs, Gt = Gt, Ds = Ds,  Dt = Dt)
-    res = BaselliModel(G_SI = G_SI, G_IS = G_IS, G_SS = G_SS, MS = MS, MI = MI, Mρ = Mρ, R_Sρ = R_Sρ, R_Iρ = R_Iρ, wS = Normal(0, std(residual_s)), wI = Normal(0, std(residual_t)), wρ = Normal(0, sqrt(errr)), n = na, N = N, pS_anderson = pS_anderson, pI_anderson = pI_anderson, res_S = residual_s, res_I = residual_t, Gs = Gs, Gt = Gt, Ds = Ds,  Dt = Dt)
-    return res#, (Gs, Gt, Ds,  Dt)
+    # res = BaselliModel(G_SI = G_SI, G_IS = G_IS, G_SS = G_SS, MS = MS, MI = MI, Mρ = Mρ, R_Sρ = R_Sρ, R_Iρ = R_Iρ, wS = Normal(0, sqrt(errs)), wI = Normal(0, sqrt(errt)), wρ = Normal(0, sqrt(errr)), n = na, N = N, pS_anderson = pS_anderson, pI_anderson = pI_anderson, res_S = residual_s, res_I = residual_t, Gs = Gs, Gt = Gt, DS = DS,  DI = DI)
+    res = BaselliModel(G_SI = G_SI, G_IS = G_IS, G_SS = G_SS, MS = MS, MI = MI, Mρ = Mρ, R_Sρ = R_Sρ, R_Iρ = R_Iρ, wS = Normal(0, std(residual_s)), wI = Normal(0, std(residual_t)), wρ = Normal(0, sqrt(errr)), n = na, N = N, pS_anderson = pS_anderson, pI_anderson = pI_anderson, res_S = residual_s, res_I = residual_t, Gs = Gs, Gt = Gt, DS = DS,  DI = DI)
+    return res#, (Gs, Gt, DS,  DI)
 end
 
 @with_kw mutable struct rstData
