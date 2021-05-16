@@ -95,12 +95,12 @@ function predict(model::DeBoerModel, n::Int; burnIn::Int = 0)
     history = max(lena, lenb)
     if model.hasState && history <= length(model.S)
         # Initialization Phase - connect new arrays to state
-        S = append!(model.S, Vector{Real}(undef, n + burnIn))
-        Seff = append!(model.Seff, Vector{Real}(undef, n + burnIn))
-        D = append!(model.D, Vector{Real}(undef, n + burnIn))
-        I = append!(model.I, Vector{Real}(undef, n + burnIn))
-        T = append!(model.T, Vector{Real}(undef, n + burnIn))
-        ρ = append!(model.ρ, Vector{Real}(undef, n + burnIn))
+        S = vcat(copy(model.S), Vector{Real}(undef, n + burnIn))
+        Seff = vcat(copy(model.Seff), Vector{Real}(undef, n + burnIn))
+        D = vcat(copy(model.D), Vector{Real}(undef, n + burnIn))
+        I = vcat(copy(model.I), Vector{Real}(undef, n + burnIn))
+        T = vcat(copy(model.T), Vector{Real}(undef, n + burnIn))
+        ρ = vcat(copy(model.ρ), Vector{Real}(undef, n + burnIn))
         time = model.time
         burnIn += history
     else
@@ -152,30 +152,39 @@ Predicts 'N' values of the cardiovascular variables for the respective model and
  julia> model.hasState
  true   
  ```
- """
+"""
 function predict!(model::DeBoerModel, n::Int; burnIn::Int = 0)
     S, D, I, T, ρ = predict(model, n + burnIn; burnIn = 0)
-
+    
     lena = length(model.ak) + 1
     lenb = length(model.bk)
     history = max(lena, lenb)
-
+    
     if n >= history
-    # update / shorten  state
-    model.hasState = true
-    model.S = S[end-history+1:end]
-    model.Seff = model.F(model.S)
-    model.D = D[end-history+1:end]
-    model.I = I[end-history+1:end]
-    model.T = T[end-history+1:end]
-    model.ρ = ρ[end-history+1:end]
-    model.time += sum(I)
+        # update / shorten  state
+        model.hasState = true
+        model.S = S[end-history+1:end]
+        model.Seff = model.F(model.S)
+        model.D = D[end-history+1:end]
+        model.I = I[end-history+1:end]
+        model.T = T[end-history+1:end]
+        model.ρ = ρ[end-history+1:end]
+        model.time += sum(I)
+    elseif model.hasState
+        model.hasState = true
+        model.S = append!(model.S, S)[end-history+1:end]
+        model.Seff = model.F(model.S)
+        model.D = append!(model.D, D)[end-history+1:end]
+        
+        model.I = append!(model.I, I)[end-history+1:end]
+        model.T = append!(model.T, T)[end-history+1:end]
+        model.ρ = append!(model.ρ, ρ)[end-history+1:end]
+        model.time += sum(I)
     else
         @warn "n was to short to update a valid state, it remains unchanged."
     end
 
     return (S = S[burnIn+1:end], D = D[burnIn+1:end], I = I[burnIn+1:end], T = T[burnIn+1:end], ρ = ρ[burnIn+1:end])
-
 end
 
 # simulates a phenylephrine injection by increaing the peripheral resistance over a defined time 

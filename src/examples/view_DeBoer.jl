@@ -75,11 +75,11 @@ begin
 	Npost = 20
 	S3,D3,I3,T3,R3 = predict!(model_phe, Npost, burnIn = 200)
 	
-	plot([S1; S2; S3], lab = "", title = "BP", ylab = "mmHg", color = :red)
-	pBP = plot!([D1; D2; D3], lab = "", color = :red)
-	pIBI = plot([I1; I2; I3], lab = "", ylab = "ms", title = "RR Interval")
-	plot(pBP, pIBI, layout = (2,1))
-	vline!([Npre Npre], color = :black, lab = "")
+	#plot([S1; S2; S3], lab = "", title = "BP", ylab = "mmHg", color = :red)
+	#pBP = plot!([D1; D2; D3], lab = "", color = :red)
+	#pIBI = plot([I1; I2; I3], lab = "", ylab = "ms", title = "RR Interval")
+	#plot(pBP, pIBI, layout = (2,1))
+	#vline!([Npre Npre], color = :black, lab = "")
 end
 
 # ╔═╡ b312bc92-6bbf-11eb-131e-c946cf3eb23f

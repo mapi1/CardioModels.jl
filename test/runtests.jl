@@ -23,6 +23,10 @@ end
 
     result = predict!(model, N)
     @test model.hasState
+    
+    result = predict!(model, 1)
+    @test length(result[1]) == 1
+    @test model.S[end] == result[1][1]
 
 end
 
