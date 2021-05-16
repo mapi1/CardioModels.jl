@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.14.1
+# v0.14.5
 
 using Markdown
 using InteractiveUtils
@@ -14,11 +14,55 @@ macro bind(def, element)
 end
 
 # ╔═╡ 5c3096b0-01b6-11eb-2c01-5ba0aac27b70
-using PlutoUI, Plots, KardioUtils, MonteCarloMeasurements, ControlSystems
+# if this line errors, add missing via the package manager
+using CardioModels, PlutoUI, Plots, Distributions
+
+# ╔═╡ 0c720f5f-a8be-4d8e-a803-461118c3b2be
+md"
+# DeBoer Model
+Modelling cardiorespiratory varibilities and propagating uncertainty including:
+"
+
+# ╔═╡ 2e8472f6-01b4-11eb-1f49-b35e9ee7c70b
+model = DeBoerModel();
+
+# ╔═╡ 373eadc4-01b6-11eb-0ef3-73d0e4518a24
+md"""
+N:
+$(@bind N NumberField(1:1000, default = 100))
+"""
+
+# ╔═╡ 232d91d8-01b6-11eb-08d6-3343be95b77f
+S, D, I, T, ρ = predict!(model, N, burnIn = 200);
+
+# ╔═╡ b19bf544-b153-41a0-a013-992da6cdd0cd
+md"""
+Show Spectrum:
+$(@bind psd CheckBox())
+"""
+
+# ╔═╡ 579f32aa-01b6-11eb-3a79-8f2207aeb03c
+begin
+	if psd
+		println("not here yet!")
+	else
+		s = plot(S, lab = "", ylabel = "mmHg", color = :red)
+		plot!(D, lab = "", title = "BP", ylabel = "mmHg", color = :green)
+		t = plot(T, lab = "", title = "T", ylabel = "a.u.", color = :orange)
+		i = plot(I, lab = "", title = "I", ylabel = "ms", color = :blue)
+		r = plot(ρ, lab = "", title = "ρ", ylabel = "a.u.", xlab = "beats", color = :black)
+		plot(s,t,i,r, layout = (4,1), size = (700,800))
+	end
+end
+
+# ╔═╡ ac3a7eac-6bba-11eb-37ec-49854b22053f
+md"
+# Simulating a phenylephrine injection
+
+"
 
 # ╔═╡ 53b158a2-6bbb-11eb-0fa7-87390c33cb64
 begin
-	using Distributions
 	model_phe = DeBoerModel(a0 = 9, A = 1,  noiseI = Normal(0, 25), noiseS = Normal(0, 2))
 	# pre
 	Npre = 100
@@ -37,66 +81,6 @@ begin
 	plot(pBP, pIBI, layout = (2,1))
 	vline!([Npre Npre], color = :black, lab = "")
 end
-
-# ╔═╡ a96c0a2a-01b3-11eb-3975-5953fd76dd7b
-include("./Karemaker-DeBoer/DeBoer.jl");
-
-# ╔═╡ 02590918-6c43-11eb-3f54-ab5c83dd1171
-include("./Tools/pdc.jl")
-
-# ╔═╡ 16771e7c-6c42-11eb-2b63-6f23d0ffa8d7
-cd("../")
-
-# ╔═╡ 0c720f5f-a8be-4d8e-a803-461118c3b2be
-md"
-# DeBoer Model
-Modelling cardiorespiratory varibilities and propagating uncertainty including:
-"
-
-# ╔═╡ 2e8472f6-01b4-11eb-1f49-b35e9ee7c70b
-model = DeBoerModel(TStar = 5000)
-
-# ╔═╡ 373eadc4-01b6-11eb-0ef3-73d0e4518a24
-md"""
-N:
-$(@bind N NumberField(1:1000, default = 100))
-"""
-
-# ╔═╡ 232d91d8-01b6-11eb-08d6-3343be95b77f
-S,D,I,T,R = predict!(model, N, burnIn = 200)
-
-# ╔═╡ 579f32aa-01b6-11eb-3a79-8f2207aeb03c
-begin
-	s = plot(S, lab = "", ylabel = "mmHg")
-	plot!(D, lab = "", title = "BP", ylabel = "mmHg")
-	t = plot(T, lab = "", title = "T", ylabel = "")
-	i = plot(I, lab = "", title = "I", ylabel = "ms")
-	r = plot(R, lab = "", title = "R", ylabel = "a.u.", xlab = "beats")
-	plot(s,t,i,r, layout = (4,1), size = (700,800))
-end
-
-# ╔═╡ 5b0037b0-01b8-11eb-3ac0-27ba57005e81
-begin
-	fs = 1.25
-	psdplot(S, lab = "S", fs = fs)
-	psdplot!(D, lab = "D", fs = fs)
-	psdplot!(R, lab = "R", fs = fs)
-	psdplot!(I, lab = "I", fs = fs)
-end
-
-# ╔═╡ 0c881790-27f5-11eb-1786-cb457238f1ae
-begin
-	y = [S D T R]
-	patPDC, patSpec, patCoh = pdc(y, metric = "diag")
-	pdcplot(patPDC, patSpec, cnames = ["S" "D" "T" "R"])
-
-end
-
-# ╔═╡ ac3a7eac-6bba-11eb-37ec-49854b22053f
-md"
-# Simulating a phenylephrine injection
-
-"
 
 # ╔═╡ b312bc92-6bbf-11eb-131e-c946cf3eb23f
 begin
@@ -117,16 +101,12 @@ end
 
 # ╔═╡ Cell order:
 # ╠═5c3096b0-01b6-11eb-2c01-5ba0aac27b70
-# ╠═16771e7c-6c42-11eb-2b63-6f23d0ffa8d7
-# ╠═a96c0a2a-01b3-11eb-3975-5953fd76dd7b
 # ╠═0c720f5f-a8be-4d8e-a803-461118c3b2be
 # ╠═2e8472f6-01b4-11eb-1f49-b35e9ee7c70b
 # ╟─373eadc4-01b6-11eb-0ef3-73d0e4518a24
 # ╠═232d91d8-01b6-11eb-08d6-3343be95b77f
-# ╟─579f32aa-01b6-11eb-3a79-8f2207aeb03c
-# ╟─5b0037b0-01b8-11eb-3ac0-27ba57005e81
-# ╠═02590918-6c43-11eb-3f54-ab5c83dd1171
-# ╠═0c881790-27f5-11eb-1786-cb457238f1ae
+# ╟─b19bf544-b153-41a0-a013-992da6cdd0cd
+# ╠═579f32aa-01b6-11eb-3a79-8f2207aeb03c
 # ╟─ac3a7eac-6bba-11eb-37ec-49854b22053f
 # ╠═53b158a2-6bbb-11eb-0fa7-87390c33cb64
 # ╠═b312bc92-6bbf-11eb-131e-c946cf3eb23f

@@ -23,6 +23,7 @@ export DeBoerModel
 export KaremakerModel
 export getModel
 export fitBaselli, postprocess
+export phenylephrine
 
 
 end # module
