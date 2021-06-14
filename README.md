@@ -14,7 +14,14 @@ Pkg.add("https://github.com/mapi1/CardioModels.jl.git")
 
 # Examples
 
-Example notebooks using [Pluto.jl](https://github.com/fonsp/Pluto.jl) are provided in the folder `src/examples` showing basic usage examples.
+Example notebooks using [Pluto.jl](https://github.com/fonsp/Pluto.jl) are provided in the folder `/examples` showing basic usage examples. The folder contains its own `Project.toml`. By running Julia in the example folder and using
+
+```julia
+using Pkg; Pkg.activate("."); Pkg.instantiate()
+```
+
+all needed packages will be installed.
+
 
 # Models
 Below is a minimal introduction of the models, for more details refer to my thesis, the docs or the original publications.
