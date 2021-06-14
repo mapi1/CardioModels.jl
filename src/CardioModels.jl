@@ -20,7 +20,7 @@ include("DeBoer.jl")
 export BaselliModel
 export predict, predict!
 export DeBoerModel
-export KaremakerModel
+export KaremakerModel, vagal_balance
 export getModel
 export fitBaselli, postprocess
 export phenylephrine

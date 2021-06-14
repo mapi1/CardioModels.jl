@@ -1,5 +1,5 @@
 ### A Pluto.jl notebook ###
-# v0.12.21
+# v0.14.8
 
 using Markdown
 using InteractiveUtils
@@ -14,16 +14,10 @@ macro bind(def, element)
 end
 
 # ╔═╡ f27d484a-0993-11eb-08c9-030d9f88b754
-using Plots, Distributions, KardioUtils, PlutoUI, DSP, Statistics
+using Plots, Distributions, PlutoUI, DSP, Statistics, CardioModels
 
 # ╔═╡ 7f846da0-5be1-11eb-1a01-7fb4743b75b8
-using ControlSystemIdentification
-
-# ╔═╡ aa59ecd6-0990-11eb-2768-b71977345d3b
-include("Karemaker.jl");
-
-# ╔═╡ 8c16ebb6-647b-11eb-13f5-735e143621e4
-include("../Tools/pdc.jl");
+#using ControlSystemIdentification
 
 # ╔═╡ 60c79388-12b7-11eb-0493-51151fa697ab
 md"""
@@ -61,8 +55,24 @@ $P_n = (\gamma I_n + 10)(1+ \varepsilon Symp_n) + noise + P_{sin}(2\pi / T_{resp
 The next systole is determined by $S_n = D_n + P_n$ 
 """
 
-# ╔═╡ 248bef08-7866-11eb-0cb9-618da2a9b959
-1000 / (1 + (0.5*0.6))
+# ╔═╡ 004f4ad1-4160-4e52-8813-70b9c73e3a29
+md"# Create a model:"
+
+# ╔═╡ 3d310136-0991-11eb-05ea-4351c72e2260
+#model = KaremakerModel(a1 = a1, a2 = a2, t_runoff = t_runoff, Dref = Dref, w = w, b_D = b_D, b_I = b_I, b_P = b_P, starling = starling, offset = offset, T_resp = T_resp, A_resp = 60, magn_pulse = 5, A_BP = 10);
+model = KaremakerModel();
+
+# ╔═╡ 2bc64aaf-c07a-4e75-84e7-ce71f743f280
+md"## Generate data:"
+
+# ╔═╡ 23cc206d-78a3-4be0-b653-a8c5123d8dd9
+md"""
+N:
+$(@bind N NumberField(1:1000, default = 100))
+"""
+
+# ╔═╡ 4935f00e-0991-11eb-2017-210b39b3aa56
+i, s, d, symp, sympd, p = predict(model, N, burnIn = 200);
 
 # ╔═╡ 7efa1b0e-0a5c-11eb-14c9-032c18080c9b
 md"""
@@ -145,12 +155,6 @@ $(@bind T_resp NumberField(0:50:10000, default = 4000))
 ms
 """
 
-# ╔═╡ 3d310136-0991-11eb-05ea-4351c72e2260
-model = KaremakerModel(a1 = a1, a2 = a2, t_runoff = t_runoff, Dref = Dref, w = w, b_D = b_D, b_I = b_I, b_P = b_P, starling = starling, offset = offset, T_resp = T_resp, A_resp = 60, magn_pulse = 5, A_BP = 10);
-
-# ╔═╡ 4935f00e-0991-11eb-2017-210b39b3aa56
-i, s, d, symp, sympd, p = predict(model, 50, burnIn = 2000);
-
 # ╔═╡ b01c33d6-0997-11eb-222c-d34da1f9aa4b
 md"""
 Plot or PSD:
@@ -166,8 +170,7 @@ begin
 		pi = plot(i, title = "RR [ms]", lab = "")
 		pbp = plot(s, title = "BP [mmHg]", lab = "", color = :red)
 		plot!(pbp, d, lab = "", color = :green)
-		hline!([Dref], lab = "D ref")
-		plot(pi, pbp, layout = (2,1), size = (700, 500))
+		plot(pi, pbp, layout = (2,1), dpi = 500)
 		# savefig("./results/Karemaker/high_var.png")
 	else
 		psdi = psdplot(i, title = "RR [ms]", method = "welch", lab = "",  fs = 1000/ (mean(i)))
@@ -205,7 +208,7 @@ Diastolic runoff as a measure of overall systemic resistence is varied which res
 """
 
 # ╔═╡ 88768a58-0d56-11eb-3075-f729afdb3b74
-scatter(i, shiftsignal(i, -1), xlims = (minimum(i)-50, maximum(i)+50), ylims = (minimum(i)-50, maximum(i)+50), title = "Poincarè Plot of RR")
+scatter(i, shiftsignal(i, -1), xlims = (minimum(i)-50, maximum(i)+50), ylims = (minimum(i)-50, maximum(i)+50), title = "Poincarè Plot of RR", dpi = 500)
 
 # ╔═╡ 4eb77de8-120d-11eb-3d3b-f1414ea32fef
 begin
@@ -217,7 +220,6 @@ begin
 	plot!(symp_drive, db, lab = "DB", xlab = "sympathetic drive")
 	#plot(pv, pr, p_BP, layout = (3,1))
 	plot(pv, pr, layout = (2,1))
-	#savefig("./results/Karemaker/sym_balance_low_force.png")
 end
 
 # ╔═╡ e1c10806-55b1-11eb-013e-258e97d5d65a
@@ -228,18 +230,16 @@ begin
 	#pv2 = plot(lf, hf, line_z = Float64.(symp_drive2), ylab = "HF", xlab = "LF", lab = "", title = "Sympathovagal Balance", legend_titel = "symp_drive")
 	pr2 = plot(symp_drive2, rr2, ylab = "RR [ms]", xlab = "sympathetic drive", lab = "")
 	plot(pv2, pr2, layout = (2,1))
-	#scatter(symp_drive2, lf./hf)
-	#savefig("./results/Karemaker/sym_balance.png")
 end
 
 # ╔═╡ Cell order:
 # ╠═f27d484a-0993-11eb-08c9-030d9f88b754
 # ╠═7f846da0-5be1-11eb-1a01-7fb4743b75b8
-# ╠═aa59ecd6-0990-11eb-2768-b71977345d3b
-# ╠═8c16ebb6-647b-11eb-13f5-735e143621e4
 # ╟─60c79388-12b7-11eb-0493-51151fa697ab
-# ╠═248bef08-7866-11eb-0cb9-618da2a9b959
+# ╟─004f4ad1-4160-4e52-8813-70b9c73e3a29
 # ╠═3d310136-0991-11eb-05ea-4351c72e2260
+# ╟─2bc64aaf-c07a-4e75-84e7-ce71f743f280
+# ╟─23cc206d-78a3-4be0-b653-a8c5123d8dd9
 # ╠═4935f00e-0991-11eb-2017-210b39b3aa56
 # ╟─7efa1b0e-0a5c-11eb-14c9-032c18080c9b
 # ╟─25b183da-0998-11eb-0a1f-03534abcdc2e
