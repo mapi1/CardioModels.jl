@@ -88,6 +88,7 @@ begin
 	pIBI = plot([I1; I2; I3; I4], lab = "", ylab = "ms", title = "I", color = :blue)
 	plot(pBP, pIBI, layout = (2,1))
 	vline!([Npre Npre], color = :black, lab = "", dpi = dpi)
+
 end
 
 # ╔═╡ b312bc92-6bbf-11eb-131e-c946cf3eb23f
@@ -95,7 +96,8 @@ begin
 	xbp = 0:30
 	yms = 9 .* xbp
 	scatter(S2 .- minimum(S2), I2 .- minimum(I2), lab = "", title = "Simulated response")
-	plot!(xbp, yms, color = :black, lab = "BRS 9 ms/mmHg", ylab = "ΔI [ms]", xlab = "ΔS [mmHg]", dpi = dpi)
+	plot!(xbp, yms, color = :black, lab = "BRS 9 ms/mmHg", ylab = "\\Delta I [ms]", xlab = "\\Delta S [mmHg]", dpi = dpi)
+	
 end
 
 # ╔═╡ Cell order:

@@ -20,7 +20,7 @@ julia> psd(signal)
 @userplot PSDPlot
 # psdplot(signal, fs; maxf = nothing, estimator = welch_pgram, kwargs...)
 @recipe function f(p::PSDPlot; fs = 1, maxf::Real = -1, method = "welch", order = 20)
-    y = detrend(p.args[1])
+    y = (p.args[1]) .- mean(p.args[1]) # detrend/ remove dc component
     # Methods for estimation
     if method == "ar"
         psd = pyulear(vec(y), order, fs = fs)
