@@ -64,13 +64,13 @@ KaremakerModel
 end
 
 """
-    predict(model::DeBoerModel, n::Int; burnIn::Int = 0) 
+    predict(model::KaremakerModel, n::Int; burnIn::Int = 0) 
 
 Predicts 'N' values of the cardiovascular variables for the respective model. With 'burnIn' a certain number af values can be dropped in the beginning.
     
 # Examples
 ```julia
- julia> S, D, P, I, Symp ρ = predict(model, 100)  
+ julia> S, D, P, I, Symp, ρ = predict(model, 100)  
  (S = [...], D = [...], P = [...], I = [...], Symp = [...], ρ = [...])   
  ```
  """
@@ -133,7 +133,7 @@ function predict(model::KaremakerModel, n::Int; burnIn::Int = 50)
 end
 
 
-# model = KaremakerModel(Dref=45)
+# model = KaremakerModel()
 # i, s, d, symp = predict(model, 1000, burnIn = 45)
 # get_lfhf(i)
 # mean(symp)
@@ -165,13 +165,14 @@ end
 
 function get_lfhf(i)
     fs = 1000 / (mean(i))
-    i = detrend(i)
+    i = i .- mean(i)
     pgram = welch_pgram(i, fs = fs)
     inds_lf = findall(x -> 0.04 <= x <= 0.15, pgram.freq)
     inds_hf = findall(x -> 0.15 <= x <= 0.5, pgram.freq)
     pow_lf = sum(pgram.power[inds_lf])
     pow_hf = sum(pgram.power[inds_hf])
     lfhf = pow_lf / pow_hf  
+    return lfhf
 end
 
 function get_lfhf_raw(i; method::String = "simple", T::Union{Nothing, Real} = nothing)
@@ -254,7 +255,8 @@ function vagal_balance(Dref::Real, runoffs::Union{AbstractVector{Real}, StepRang
             model.Dref = Dref
             model.t_runoff = runoff
         end
-        i, s, d, symp = predict(model, n)
+        s, d, _, i, symp, _ = predict(model, n) 
+        # i, s, d, symp = predict(model, n)
         push!(rr, mean(i))
         push!(sb, mean(s))
         push!(db, mean(d))
@@ -271,9 +273,9 @@ end
 # plot!(symp_drive, rr ./ 1000)
 
 # begin
-#     model = KaremakerModel()
-#     runoffs = range(1700, 2500, length = 100)
-#     rr,symp_drive, lfhf = vagal_balance(70, runoffs, model = model)
+#     model = KaremakerModel(b_I = 0.5)
+#     runoffs = range(1250, 2850, length = 100)
+#     rr,symp_drive, lfhf, sb, db = vagal_balance(55, runoffs, model = model)
 #     pv = plot(symp_drive, lfhf, ylab = "LF/HF ratio", lab = "")
 #     pr = plot(symp_drive, rr, ylab = "RR [ms]", xlab = "sympathetic drive", lab = "")
 #     plot(pv, pr, layout = (2,1))
