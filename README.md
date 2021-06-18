@@ -26,14 +26,15 @@ all required packages will be installed.
 # Models
 Below is a minimal introduction of the models, for more details refer to my thesis, the docs or the original publications. The following convention is used for cardiovascular variables:
 
-* $I$:  RR Intrval series
-* $S$:  Systolic blood pressure
-* $D$:  Diastolic blood pressure
-* $P$:  Pulse Pressure
-* $\rho$:   Respiration
-* $T$: Time constant as a measure of peripheral resistance $R$
+* I:  RR Intrval series
+* S:  Systolic blood pressure
+* D:  Diastolic blood pressure
+* P:  Pulse Pressure
+* <a href="https://www.codecogs.com/eqnedit.php?latex=\rho" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\rho" title="\rho" /></a>:   Respiration
+* T: Time constant as a measure of peripheral resistance R
 
-
+The relation between different variables is shown in the below figure:
+![Notation and relation of cardiovascular variables](https://github.com/mapi1/CardioModels.jl/blob/master/examples/figures/rst.svg)
 ## DeBoer-model
 
 *Source:* DeBoer, R. W., Karemaker, J. M., & Strackee, J. (1987). Hemodynamic fluctuations and baroreflex sensitivity in humans: a beat-to-beat model. American Journal of Physiology-Heart and Circulatory Physiology, 253(3), H680-H689. ([DOI][deb87])
