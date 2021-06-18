@@ -20,13 +20,30 @@ Example notebooks using [Pluto.jl](https://github.com/fonsp/Pluto.jl) are provid
 using Pkg; Pkg.activate("."); Pkg.instantiate()
 ```
 
-all needed packages will be installed.
+all required packages will be installed.
 
 
 # Models
-Below is a minimal introduction of the models, for more details refer to my thesis, the docs or the original publications.
+Below is a minimal introduction of the models, for more details refer to my thesis, the docs or the original publications. The following convention is used for cardiovascular variables:
+
+* $I$:  RR Intrval series
+* $S$:  Systolic blood pressure
+* $D$:  Diastolic blood pressure
+* $P$:  Pulse Pressure
+* $\rho$:   Respiration
+* $T$: Time constant as a measure of peripheral resistance $R$
+
+
 ## DeBoer-model
 
+*Source:* DeBoer, R. W., Karemaker, J. M., & Strackee, J. (1987). Hemodynamic fluctuations and baroreflex sensitivity in humans: a beat-to-beat model. American Journal of Physiology-Heart and Circulatory Physiology, 253(3), H680-H689. ([DOI][deb87])
+
+[deb87]: https://doi.org/10.1152/ajpheart.1987.253.3.H680
 ## Karemaker-model
 
+*Source:* Karemaker, J. M. (1998). Testing the validity of LF/HF as measure of ‘sympathovagal balance’ in a computer model of cardiovascular control. Proceedings of the IX International Symposium on the Autonomic Nervous System. 
 ## Baselli-model
+
+*Source:* Baselli, G., Cerutti, S., Civardi, S., Malliani, A., & Pagani, M. (1988). Cardiovascular variability signals: towards the identification of a closed-loop model of the neural control mechanisms. IEEE Transactions on Biomedical Engineering, 35(12), 1033-1046. ([DOI][bas88])
+
+[bas88]: https://doi.org/10.1109/10.8688
