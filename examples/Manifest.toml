@@ -77,7 +77,7 @@ version = "1.16.1+0"
 
 [[CardioModels]]
 deps = ["ControlSystemIdentification", "ControlSystems", "DSP", "Distributions", "HypothesisTests", "LinearAlgebra", "MonteCarloMeasurements", "Parameters", "Random", "RecipesBase", "StatsPlots"]
-git-tree-sha1 = "a3e625a64dcbcd72ec5f148c0cd71581a86fdb3d"
+git-tree-sha1 = "7a7d72e968e17a3659b6abf3d8c534b335e77a04"
 repo-rev = "master"
 repo-url = "git@github.com:mapi1/CardioModels.jl.git"
 uuid = "1f166ad9-b57b-4ed0-9f69-a7dd21977d95"

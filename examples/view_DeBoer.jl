@@ -19,6 +19,38 @@ using CardioModels, PlutoUI, Plots, Distributions
 # ╔═╡ 0c720f5f-a8be-4d8e-a803-461118c3b2be
 md"
 # DeBoer Model
+
+Following equations manifest the model:
+
+#### Effective pressure:
+The systolic pressure is transformed to be in accordance with the sigmoid shaped activation curve of the baroreflex. The constant $S_0$ defines the working point.
+
+$S_{n}^{\star} = f(S_n)\hspace{5mm}\text{with} \hspace{5mm} f(S_n) = S_0 + 18\text{atan}\left(\frac{S_{n} -S_0 }{18}\right)$
+
+#### Baroreflex on Heart Rate
+The transfer function $G_a(z)$ relates the effective systolic pressure to the RR interval. It models fast vagally mediated and slower, sympathetic, baroreflex effects.
+
+$I_{n} = G_a (z) S_{n}^{\star}$
+
+#### Baroreflex on Peripheral Resistance
+The peripheral resistance is influenced by the baroreflex mediated through the sympathetic nervous system reflected in the transfer function $G_b(z)$. $T_0$ is an empirical offset constant (around 3000 ms).
+
+$T_{ n } = R_n C = T_{ 0 } + G_b(z)S_{n}^{\star}$
+
+#### Properties of Myocardium & Respiration
+Starling's law governs the pulse pressure through the coupling constant $\gamma$. Respiration also enters through the pulse pressure, modeled as a sine. 
+
+$P_{ n } = \gamma I_{n}  + A_{\rho}\sin(2\pi f_{\rho} t) \hspace{5mm} \text{with} \hspace{5mm} t = \sum I_n$
+
+#### Windkessel
+Diastolic pressure is derived from the two-element Windkessel model.
+
+$D_{ n } = S_{n} \exp \left( - \frac{I_{n}}{ T_{n} } \right)$
+
+#### Time Propagation 
+The next beat is calculated through the standard relation:
+
+$S_{n+1} = P_{n} + D_{n}$
 "
 
 # ╔═╡ 2e8472f6-01b4-11eb-1f49-b35e9ee7c70b
@@ -39,12 +71,6 @@ Show Spectrum:
 $(@bind psd CheckBox())
 """
 
-# ╔═╡ 8eb6f0f6-0a4b-4fff-bf25-02a37be7b892
-md"""
-DPI:
-$(@bind dpi NumberField(1:1000, default = 500)) adjust if plots are to small/ big.
-"""
-
 # ╔═╡ 579f32aa-01b6-11eb-3a79-8f2207aeb03c
 begin
 	if psd
@@ -55,7 +81,7 @@ begin
 		t = plot(T, lab = "", title = "T", ylabel = "a.u.", color = :orange)
 		i = plot(I, lab = "", title = "I", ylabel = "ms", color = :blue)
 		r = plot(ρ, lab = "", title = "ρ", ylabel = "a.u.", xlab = "beats", color = :black)
-		plot(s,t,i,r, layout = (4,1), dpi = dpi) # Change dpi if the plot is to big/small
+		plot(s,t,i,r, layout = (4,1), dpi = 500) 
 	end
 end
 
@@ -87,7 +113,7 @@ begin
 	pBP = plot!([D1; D2; D3; D4], lab = "", color = :green)
 	pIBI = plot([I1; I2; I3; I4], lab = "", ylab = "ms", title = "I", color = :blue)
 	plot(pBP, pIBI, layout = (2,1))
-	vline!([Npre Npre], color = :black, lab = "", dpi = dpi)
+	vline!([Npre Npre], color = :black, lab = "", dpi = 500)
 
 end
 
@@ -96,7 +122,7 @@ begin
 	xbp = 0:30
 	yms = 9 .* xbp
 	scatter(S2 .- minimum(S2), I2 .- minimum(I2), lab = "", title = "Simulated response")
-	plot!(xbp, yms, color = :black, lab = "BRS 9 ms/mmHg", ylab = "\\Delta I [ms]", xlab = "\\Delta S [mmHg]", dpi = dpi)
+	plot!(xbp, yms, color = :black, lab = "BRS 9 ms/mmHg", ylab = "\\Delta I [ms]", xlab = "\\Delta S [mmHg]", dpi = 500)
 	
 end
 
@@ -107,8 +133,7 @@ end
 # ╟─373eadc4-01b6-11eb-0ef3-73d0e4518a24
 # ╠═232d91d8-01b6-11eb-08d6-3343be95b77f
 # ╟─b19bf544-b153-41a0-a013-992da6cdd0cd
-# ╟─8eb6f0f6-0a4b-4fff-bf25-02a37be7b892
-# ╠═579f32aa-01b6-11eb-3a79-8f2207aeb03c
-# ╠═ac3a7eac-6bba-11eb-37ec-49854b22053f
+# ╟─579f32aa-01b6-11eb-3a79-8f2207aeb03c
+# ╟─ac3a7eac-6bba-11eb-37ec-49854b22053f
 # ╠═53b158a2-6bbb-11eb-0fa7-87390c33cb64
 # ╠═b312bc92-6bbf-11eb-131e-c946cf3eb23f
