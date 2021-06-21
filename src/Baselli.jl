@@ -185,10 +185,10 @@ end
 @recipe function f(model::BaselliModel; plotphase = false)
     w = range(0, stop = π, length = 256)
     
-    #layout := (4,3)
-     layout := @layout [_ G_IS R_Iρ MI
-     G_SS G_SI R_Sρ MS
-     wS wI wρ Mρ]
+    layout := (4,3)
+    # layout := @layout [_ G_IS R_Iρ MI
+     #G_SS G_SI R_Sρ MS
+     #wS wI wρ Mρ]
     
     @series begin
         mag, phase, w = bode(model.Mρ, w)

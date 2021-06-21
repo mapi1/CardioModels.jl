@@ -48,7 +48,7 @@ $(@bind dpi NumberField(1:1000, default = 500)) adjust if plots are to small/ bi
 # ╔═╡ 579f32aa-01b6-11eb-3a79-8f2207aeb03c
 begin
 	if psd
-		println("not here yet!")
+		psdplot(S)
 	else
 		s = plot(S, lab = "", ylabel = "mmHg", color = :red)
 		plot!(D, lab = "", title = "BP", ylabel = "mmHg", color = :green)

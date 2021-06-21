@@ -1,7 +1,7 @@
 module CardioModels
 
 # deps
-using ControlSystems: include
+using ControlSystems
 using Random, Distributions, LinearAlgebra
 using DSP
 using HypothesisTests
