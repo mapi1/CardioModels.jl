@@ -21,38 +21,41 @@ using Plots, Distributions, PlutoUI, DSP, Statistics, CardioModels
 
 # ╔═╡ 60c79388-12b7-11eb-0493-51151fa697ab
 md"""
-**About the model**
-\
+### About the model
+
 A main feature of the model is that beside parasympathetic pathway through the baroreflex a sympathetic way is added. Sympathetic activity is triggered if the diastolic pressure falls below a reference value an influences heart rate, inotropy and systemic resistence with some delay. In this way a 0.1Hz oscilation is induced.
+
+#### The overall model is formulated as follows
+
+##### Sympathetic activation
+
+$SympD_n = 0 \hspace{5mm} \text{if} \hspace{22mm} D_{n} > D_{\text{ref}}$
+$SympD_n = D_{\text{ref}} - D_n \hspace{5mm} \text{if} \hspace{5mm} D_n \leq D_{\text{ref}}$
+$Symp_n = \text{atan} \left(G_{SA}(z) \cdot SympD_{n}\right)$
+
+
+##### Baroreflex
+
+$I_n^{\star} = a_1 S_{n-1} + I_0 + w_I + A_{\rho}^I\sin(2\pi f_{\rho}t + \phi) \hspace{5mm} \text{if} \hspace{5mm}I_{n-1} > 700\ ms$
+
+$I_n^{\star} = a_2 S_{n-2} + I_0 + w_I + A_{\rho}^I\sin(2\pi f_{\rho}t + \phi) \hspace{5mm} \text{if} \hspace{5mm}I_{n-1} \leq 700\ ms$
+
+$I_n = \frac{I_n^{\star}}{1 + \beta Symp_n}$
+
+with $\beta$ the sympathetic 'force' on $I$
+
+##### Windkessel
+
+$D_n = S_{n} \exp\left(\frac{-I_n }{R C (1 + \delta Symp_n)}\right)$
+
+with $RC$ the diastolic runoff and $\delta$ the sympathetic 'force' on $D$
+
+##### Starling/Restitution
+
+$P_n = (\gamma I_n + P_0)(1+ \varepsilon Symp_n) + w_P + A_{\rho}^P\sin(2\pi f_{\rho}t + \phi)$
+with $\varepsilon$ the sympathetic 'force' on $P$ (inotropy by symathetics and respiratory BP modulation)
 \
-**The overall model is formulated as follows**
-\
-**Baroreflex:**
-\
-1. Parasympathetic on interval duration $I_n$
-\
-$I_n = a_1S_{n-1}+ c_1 + noise + I_{sin}(2\pi / T_{resp})$;  if $I_{n-1} > 700\ ms$
-$I_n = a_2S_{n-1}+ c_1 + noise + I_{sin}(2\pi / T_{resp})$;  if $I_{n-1} \leq 700\ ms$
-\
-2. Sympathetic in Interval duration $I_n$
-\
-$I_n = I_n / (1 + \beta Symp_n)$; with $\beta$ the sympathetic 'force' on $I$
-\
-3. Sympathetic activation by diastolic pressure $D_n$
-\
-$SympD_n = 0$; if $D_n > D_{ref}$ or    
-$SympD_n = D_{ref} - D_n$; if $D_n \leq D_{ref}$
-$Symp_n = atan\left(\sum_{i = 1}^{6} a_i SympD_{n-i}\right)$
-\
-**Windkessel**
-\
-$D_n = S_{n-1} \cdot exp\left(\frac{-I_n / RC}{1 + \delta Symp_n}\right)$; with $RC$ the diastolic runoff and $\delta$ the sympathetic 'force' on $D$
-\
-**Starling/Restitution**
-\
-$P_n = (\gamma I_n + 10)(1+ \varepsilon Symp_n) + noise + P_{sin}(2\pi / T_{resp})$ with $\varepsilon$ the sympathetic 'force' on $P$ (inotropy by symathetics and respiratory BP modulation)
-\
-The next systole is determined by $S_n = D_n + P_n$ 
+The next systole is determined by $S_{n+1} = D_n + P_n$ 
 """
 
 # ╔═╡ 004f4ad1-4160-4e52-8813-70b9c73e3a29
@@ -157,11 +160,8 @@ S, D, P, I, Symp, ρ = predict(model, N, burnIn = 200);
 
 # ╔═╡ b01c33d6-0997-11eb-222c-d34da1f9aa4b
 md"""
-Plot or PSD:
+Schow spectral density:
 $(@bind p_psd CheckBox())
- symp_drive = $(round(mean(Symp), digits = 4))
-	meanD = $(round(mean(D), digits = 4))
-stdD =  $(std(D))
 """
 
 # ╔═╡ e3c9adde-0993-11eb-191c-b501deb4a46f
@@ -175,7 +175,7 @@ begin
 		psdi = psdplot(I, title = "RR [ms]", method = "welch", lab = "",  fs = 1000/ (mean(I)))
 		psdbp = psdplot(S, title = "BP [mmHg]", lab = "", color = :red, fs = 1000/ (mean(I)))
 		psdplot!(psdbp, D, lab = "", color = :green, fs = 1000/ (mean(I)))
-		plot(psdi, psdbp, layout = (2,1), size = (700, 500), fs = 1000/ (mean(i)))
+		plot(psdi, psdbp, layout = (2,1), size = (700, 500), fs = 1000/ (mean(I)))
 		vline!([1/(0.001T_resp)], lab = "f_resp")
 	end
 end
@@ -200,9 +200,6 @@ begin
 	plot(pv, pr, layout = (2,1))
 end
 
-# ╔═╡ e0dfd456-d406-4436-8af6-68d6dbbc3872
-model2
-
 # ╔═╡ Cell order:
 # ╠═f27d484a-0993-11eb-08c9-030d9f88b754
 # ╠═7f846da0-5be1-11eb-1a01-7fb4743b75b8
@@ -224,7 +221,6 @@ model2
 # ╟─23cc206d-78a3-4be0-b653-a8c5123d8dd9
 # ╠═4935f00e-0991-11eb-2017-210b39b3aa56
 # ╟─b01c33d6-0997-11eb-222c-d34da1f9aa4b
-# ╠═e3c9adde-0993-11eb-191c-b501deb4a46f
+# ╟─e3c9adde-0993-11eb-191c-b501deb4a46f
 # ╟─0f3b19aa-120c-11eb-3c2a-6f5e3e1e42fa
 # ╠═4eb77de8-120d-11eb-3d3b-f1414ea32fef
-# ╠═e0dfd456-d406-4436-8af6-68d6dbbc3872
