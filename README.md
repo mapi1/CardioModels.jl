@@ -1,6 +1,6 @@
 # CardioModels.jl
 
-![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg) [![codecov.io](http://codecov.io/github/mapi1/CardioModels.jl/coverage.svg?branch=master)](http://codecov.io/github/mapi1/CardioModels.jl?branch=master) [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://mapi1.github.io/CardioModels.jl/dev)
+![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg) [![codecov.io](http://codecov.io/github/mapi1/CardioModels.jl/coverage.svg?branch=master)](http://codecov.io/github/mapi1/CardioModels.jl?branch=master) [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://mapi1.github.io/CardioModels.jl/dev) [![Build Status](https://github.com/mapi1/CardioModels.jl/workflows/CI_on_Master/badge.svg)](https://github.com/mapi1/CardioModels.jl/actions?workflow=CI_on_Master)
 
 This little package gives some models of cardiovascular variability used in my thesis, for experimenting and learning.
 
