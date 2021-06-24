@@ -98,6 +98,9 @@ begin
 	plot!(modelEstimate, lab = "", color = :red, dpi = 500, size = (1000, 500))
 end
 
+# ╔═╡ 86d849c1-5a6b-4d65-9ea1-cfc85cda5072
+postprocess(modelEstimate, S, I)
+
 # ╔═╡ Cell order:
 # ╠═6d960bb1-b4d7-49f3-8549-78786eabfc74
 # ╟─d494e27e-7c67-4abc-b491-0dd09e58f169
@@ -112,3 +115,4 @@ end
 # ╟─f2963e4f-e032-4fe1-99a8-2fca1c4667c7
 # ╠═b33cbdd4-0af3-4c3f-833e-334bf22cc964
 # ╠═86c8b99c-4d2a-43b7-ad8a-bb639791d97c
+# ╠═86d849c1-5a6b-4d65-9ea1-cfc85cda5072
