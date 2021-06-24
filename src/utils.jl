@@ -11,12 +11,9 @@ Futher plot parameters can be passed as keyword arguments.
 * 'maxf': maximum frequency that shal be displayed
 * 'method': Method for esitmation, either 'welch', 'ar' or 'fft'
 
-# Examples
-
-```jldoctest
-julia> psd(signal)
-```
 """
+psdplot
+
 @userplot PSDPlot
 # psdplot(signal, fs; maxf = nothing, estimator = welch_pgram, kwargs...)
 @recipe function f(p::PSDPlot; fs = 1, maxf::Real = -1, method = "welch", order = 20)
@@ -97,7 +94,7 @@ Get the spectral power of a certain frequency range, in natural frequencies, usi
 
 # Examples
 
-```jldoctest
+```julia
 julia> getSpectralComponent(signal, (0.1, 0.4))
 ```
 """
@@ -135,7 +132,7 @@ Get the spectral power of a certain frequency range, in natural frequencies, usi
 
 # Examples
 
-```jldoctest
+```julia
 julia> getSpectralComponent(ar(iddata(signal), 10), (0.1, 0.4))
 ```
 """

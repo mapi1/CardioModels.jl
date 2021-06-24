@@ -1,3 +1,4 @@
+using Base: disassociate_julia_struct
 module CardioModels
 
 # deps
@@ -30,4 +31,3 @@ export psdplot, psdplot!
 
 
 end # module
-
