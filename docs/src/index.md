@@ -1,3 +1,7 @@
 # CardioModels
 
-*Documentation goes here.*
+```@index
+```
+
+```@autodocs
+```
