@@ -2,7 +2,7 @@
 
 ![Lifecycle](https://img.shields.io/badge/lifecycle-experimental-orange.svg) [![codecov.io](http://codecov.io/github/mapi1/CardioModels.jl/coverage.svg?branch=master)](http://codecov.io/github/mapi1/CardioModels.jl?branch=master) [![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://mapi1.github.io/CardioModels.jl/dev)
 
-This little package gives some models of cardiovascular variability, for experimenting and learning.
+This little package gives some models of cardiovascular variability used in my thesis, for experimenting and learning.
 
 # Installation
 

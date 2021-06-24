@@ -13,6 +13,9 @@ N = 100
 
     model_est = fitBaselli(result...)
     @test typeof(model_est) == BaselliModel
+
+    post = postprocess(model_est, result[1], result[2])
+    @test length(post) == 8
 end
 
 @testset "DeBoer" begin

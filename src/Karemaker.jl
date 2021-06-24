@@ -242,6 +242,11 @@ function lfhf2D(Dref::Real, runoffs::Union{AbstractVector{Real}, StepRangeLen}; 
     return rr, symp_drive, lf, hf
 end
 
+"""
+    function vagal_balance(Dref::Real, runoffs::Union{AbstractVector{Real}, StepRangeLen}; n::Int = 5000, model::Union{Nothing, KaremakerModel} = nothing)
+
+Calculates the LF/HF ratio for all distolic runoff constants in 'runoffs' returns also some means for different signals.
+"""
 function vagal_balance(Dref::Real, runoffs::Union{AbstractVector{Real}, StepRangeLen}; n::Int = 5000, model::Union{Nothing, KaremakerModel} = nothing)
     rr = []
     symp_drive = []
@@ -266,20 +271,6 @@ function vagal_balance(Dref::Real, runoffs::Union{AbstractVector{Real}, StepRang
     return rr, symp_drive, lfhf, sb, db
 end
 
-# runoffs = range(1200, 2200, length = 100)
-# rr,symp_drive, lfhf = vagal_balance(63, runoffs)
-
-# plot(symp_drive, lfhf)
-# plot!(symp_drive, rr ./ 1000)
-
-# begin
-#     model = KaremakerModel(b_I = 0.5)
-#     runoffs = range(1250, 2850, length = 100)
-#     rr,symp_drive, lfhf, sb, db = vagal_balance(55, runoffs, model = model)
-#     pv = plot(symp_drive, lfhf, ylab = "LF/HF ratio", lab = "")
-#     pr = plot(symp_drive, rr, ylab = "RR [ms]", xlab = "sympathetic drive", lab = "")
-#     plot(pv, pr, layout = (2,1))
-# end
 
 function vagal_balance_respiration(Ts::Union{AbstractVector{Real}, StepRangeLen}, Dref::Real, runoffs::Union{AbstractVector{Real}, StepRangeLen}; n::Int = 5000, model::Union{Nothing, KaremakerModel} = nothing)
     rr = []
