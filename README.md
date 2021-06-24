@@ -6,7 +6,7 @@ This little package gives some models of cardiovascular variability used in my t
 
 # Installation
 
-To install this package type the following into the REPL
+To install this package type the following into the REPL, this requires Julia >= 1.6 
 ```julia
 using Pkg
 Pkg.add("https://github.com/mapi1/CardioModels.jl.git")
