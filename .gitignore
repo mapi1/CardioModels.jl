@@ -4,5 +4,5 @@
 /deps/deps.jl
 /docs/build
 /.vscode
-/Manifest.toml
-/examples/Manifest.toml
+Manifest.toml
+examples/Manifest.toml
