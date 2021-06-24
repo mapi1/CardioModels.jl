@@ -1,7 +1,7 @@
 name = "CardioModels"
 uuid = "1f166ad9-b57b-4ed0-9f69-a7dd21977d95"
 authors = ["Marius Pille <marius.pille@hu-berlin.de>"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 ControlSystemIdentification = "3abffc1c-5106-53b7-b354-a47bfc086282"
