@@ -16,14 +16,11 @@ end
 # ╔═╡ f27d484a-0993-11eb-08c9-030d9f88b754
 using Plots, Distributions, PlutoUI, DSP, Statistics, CardioModels
 
-# ╔═╡ 7f846da0-5be1-11eb-1a01-7fb4743b75b8
-#using ControlSystemIdentification
-
 # ╔═╡ 60c79388-12b7-11eb-0493-51151fa697ab
 md"""
 ### About the model
 
-A main feature of the model is that beside parasympathetic pathway through the baroreflex a sympathetic way is added. Sympathetic activity is triggered if the diastolic pressure falls below a reference value an influences heart rate, inotropy and systemic resistence with some delay. In this way a 0.1Hz oscilation is induced.
+A main feature of the model is that besides parasympathetic action through the baroreflex, sympathetic action is added. Sympathetic activity is triggered if the diastolic pressure falls below a reference value and influences heart rate, inotropy, and systemic resistance with some delay. In this way, a 0.1Hz oscillation is induced.
 
 #### The overall model is formulated as follows
 
@@ -202,7 +199,6 @@ end
 
 # ╔═╡ Cell order:
 # ╠═f27d484a-0993-11eb-08c9-030d9f88b754
-# ╠═7f846da0-5be1-11eb-1a01-7fb4743b75b8
 # ╟─60c79388-12b7-11eb-0493-51151fa697ab
 # ╟─004f4ad1-4160-4e52-8813-70b9c73e3a29
 # ╠═3d310136-0991-11eb-05ea-4351c72e2260

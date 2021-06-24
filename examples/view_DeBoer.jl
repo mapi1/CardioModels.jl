@@ -20,10 +20,10 @@ using CardioModels, PlutoUI, Plots, Distributions
 md"
 # DeBoer Model
 
-Following equations manifest the model:
+The following equations manifest the model:
 
 #### Effective pressure:
-The systolic pressure is transformed to be in accordance with the sigmoid shaped activation curve of the baroreflex. The constant $S_0$ defines the working point.
+The systolic pressure is transformed to be in accordance with the sigmoid-shaped activation curve of the baroreflex. The constant $S_0$ defines the working point.
 
 $S_{n}^{\star} = f(S_n)\hspace{5mm}\text{with} \hspace{5mm} f(S_n) = S_0 + 18\text{atan}\left(\frac{S_{n} -S_0 }{18}\right)$
 

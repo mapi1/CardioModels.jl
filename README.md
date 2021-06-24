@@ -36,14 +36,17 @@ Below is a minimal introduction of the models, for more details refer to my thes
 The relation between different variables is shown in the below figure:
 ![Notation and relation of cardiovascular variables](https://github.com/mapi1/CardioModels.jl/blob/master/examples/figures/rst.svg)
 ## DeBoer-model
+![DeBoer-model](https://github.com/mapi1/CardioModels.jl/blob/master/examples/figures/deBoer.png)
 
 *Source:* DeBoer, R. W., Karemaker, J. M., & Strackee, J. (1987). Hemodynamic fluctuations and baroreflex sensitivity in humans: a beat-to-beat model. American Journal of Physiology-Heart and Circulatory Physiology, 253(3), H680-H689. ([DOI][deb87])
 
 [deb87]: https://doi.org/10.1152/ajpheart.1987.253.3.H680
 ## Karemaker-model
+![Karemaker-model](https://github.com/mapi1/CardioModels.jl/blob/master/examples/figures/karemaker.png)
 
 *Source:* Karemaker, J. M. (1998). Testing the validity of LF/HF as measure of ‘sympathovagal balance’ in a computer model of cardiovascular control. Proceedings of the IX International Symposium on the Autonomic Nervous System. 
 ## Baselli-model
+![Baselli-model](https://github.com/mapi1/CardioModels.jl/blob/master/examples/figures/baselli.png)
 
 *Source:* Baselli, G., Cerutti, S., Civardi, S., Malliani, A., & Pagani, M. (1988). Cardiovascular variability signals: towards the identification of a closed-loop model of the neural control mechanisms. IEEE Transactions on Biomedical Engineering, 35(12), 1033-1046. ([DOI][bas88])
 
