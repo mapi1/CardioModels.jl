@@ -1,5 +1,3 @@
-
-
 """
     fitBaselli(S::Vector{<:Real}, I::Vector{<:Real}, ρ::Vector{<:Real}; ...)
 

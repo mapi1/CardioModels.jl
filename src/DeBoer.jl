@@ -217,29 +217,3 @@ function BRSf(model::DeBoerModel)
     f = w ./ 2π
     return f, vec(mag), vec(phase), A
 end
-
-## BRS(f)
-# model = DeBoerModel()
-# f, gain, phase, A = BRSf(model)
-# plot(f, gain, lab = "", xlab = "f [c/b]", ylab = "BRS [ms/mmHg]", ylims = [0,18])
-# hline!([9], color  =  :black, lab = "vagal BRS: 9 ms/mmHg")
-##
-
-### f(S)
-# model = DeBoerModel()
-# S = 60:180
-# Seff = model.F.(S)
-# plot(S, Seff, ylab = "Seff", xlab = "S", lab = "", color = :black, size = (200, 200))
-# savefig("./results/seff.svg")
-###
-
-### sigmoid for BRS
-# sig(t) = 1 / (1 + exp(-t))
-# t = -5:0.01:5
-# plot(t, sig.(t), lab = "", grid = :off, color = :black, linewidth = 2)
-# savefig("./results/brs.svg")
-# x = 1
-###
-# x = 1
-# s,d,i,t = predict(model, 100)
-# plot([s, i])
