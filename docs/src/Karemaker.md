@@ -7,9 +7,14 @@ A main feature of the model is that besides parasympathetic action through the b
 
 #### Sympathetic activation
 
-$SympD_n = 0 \hspace{5mm} \text{if} \hspace{22mm} D_{n} > D_{\text{ref}}$
-$SympD_n = D_{\text{ref}} - D_n \hspace{5mm} \text{if} \hspace{5mm} D_n \leq D_{\text{ref}}$
-$Symp_n = \text{atan} \left(G_{SA}(z) \cdot SympD_{n}\right)$
+```math
+\begin{aligned}
+SympD_n &= 0 \hspace{18mm} \text{if} \hspace{5mm} D_{n} > D_{\text{ref}} \\
+SympD_n &= D_{\text{ref}} - D_n \hspace{5mm} \text{if} \hspace{5mm} D_n \leq D_{\text{ref}}\\
+Symp_n &= \text{atan} \left(G_{SA}(z) \cdot SympD_{n}\right)
+\end{aligned}
+```
+
 
 
 #### Baroreflex

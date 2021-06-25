@@ -11,7 +11,7 @@ The following convention is used for cardiovascular variables:
 * T: Time constant as a measure of peripheral resistance R
 
 The relation between different variables is shown in the below figure:
-![Notation and relation of cardiovascular variables](src/rst.svg)
+![Notation and relation of cardiovascular variables](https://github.com/mapi1/CardioModels.jl/blob/master/examples/figures/rst.svg)
 
 ## Models
 

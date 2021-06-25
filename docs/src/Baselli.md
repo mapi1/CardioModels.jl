@@ -1,7 +1,6 @@
 # Baselli Model
-Baselli, G., Cerutti, S., Civardi, S., Malliani, A., & Pagani, M. (1988). Cardiovascular variability signals: towards the identification of a closed-loop model of the neural control mechanisms. IEEE Transactions on Biomedical Engineering, 35(12), 1033-1046. ([DOI][bas88])
-
-[bas88]: https://doi.org/10.1109/10.8688
+Baselli, G., Cerutti, S., Civardi, S., Malliani, A., & Pagani, M. (1988). Cardiovascular variability signals: towards the identification of a closed-loop model of the neural control mechanisms. IEEE Transactions on Biomedical Engineering, 35(12), 1033-1046. ([DOI](https://doi.org/10.1109/10.8688)))
+ 
 
 ## Theory
 The model is defined through the following three equations, where $G$ denotes an all-zero and $M$ an all-pole transfer function:
@@ -22,6 +21,15 @@ It can be identified from data as an ARXAR-model using the generalized least squ
 ```@docs
 BaselliModel
 ```
+The model can be plotted:
+```@setup 1
+using Plots, CardioModels
+```
+
+```@example 1
+model = getModel(1)
+plot(model)
+```
 
 Predefined models can be obtained with:
 ```@docs
@@ -40,6 +48,3 @@ fitBaselli
 postprocess
 ```
 
-```@docs
-postprocess
-```

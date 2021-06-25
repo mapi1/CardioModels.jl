@@ -104,6 +104,7 @@ Baselli et al. (1994)  *Model for the assessment of heart period and arterial pr
 * GssLF: Index of the contribution of AP regulation to the genesis of LF oscillations
 * Θt/Θs: Respiratory effects
 * PusLF/PutLF: Residual signals and detection of different L F sources 
+
 """
 function postprocess(M::BaselliModel, S::Vector{<:Real}, I::Vector{<:Real})
     # BRS

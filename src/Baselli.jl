@@ -9,28 +9,7 @@ The default initialization is not proper, to get a working model use 'getModel(s
 ```julia
 julia> model = getModel(1)
 [ Info: Simulation 1: Respiration enters on S (LF are generated in the S, S loop)
-BaselliModel
-  G_SI: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Float64}}
-  G_IS: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Float64}}
-  G_SS: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Float64}}
-  MS: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Float64}}
-  MI: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Float64}}
-  Mρ: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Float64}}
-  R_Sρ: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Float64}}
-  R_Iρ: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Float64}}
-  Gs: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Int64}}
-  Gt: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Int64}}
-  DS: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Int64}}
-  DI: ControlSystems.TransferFunction{ControlSystems.Discrete{Int64}, ControlSystems.SisoRational{Int64}}
-  wS: Distributions.Normal{Float64}
-  wI: Distributions.Normal{Float64}
-  wρ: Distributions.Normal{Float64}
-  n: Int64 10
-  N: Int64 0
-  pS_anderson: Int64 -1
-  pI_anderson: Int64 -1
-  res_S: Array{Float64}((0,)) Float64[]
-  res_I: Array{Float64}((0,)) Float64[]
+BaselliModel...
 ```
 """
 @with_kw mutable struct BaselliModel

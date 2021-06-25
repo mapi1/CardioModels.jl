@@ -1,7 +1,6 @@
 # DeBoer Model
-DeBoer, R. W., Karemaker, J. M., & Strackee, J. (1987). Hemodynamic fluctuations and baroreflex sensitivity in humans: a beat-to-beat model. American Journal of Physiology-Heart and Circulatory Physiology, 253(3), H680-H689. ([DOI][deb87])
+DeBoer, R. W., Karemaker, J. M., & Strackee, J. (1987). Hemodynamic fluctuations and baroreflex sensitivity in humans: a beat-to-beat model. American Journal of Physiology-Heart and Circulatory Physiology, 253(3), H680-H689. ([DOI](https://doi.org/10.1152/ajpheart.1987.253.3.H680))
 
-[deb87]: https://doi.org/10.1152/ajpheart.1987.253.3.H680
 ## Theory
 
 #### Effective pressure:
