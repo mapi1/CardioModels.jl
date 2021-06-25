@@ -1,5 +1,8 @@
 # Karemaker Model
 
+Karemaker, J. M. (1998). Testing the validity of LF/HF as measure of ‘sympathovagal balance’ in a computer model of cardiovascular control. Proceedings of the IX International Symposium on the Autonomic Nervous System.
+
+## Theory
 A main feature of the model is that besides parasympathetic action through the baroreflex, sympathetic action is added. Sympathetic activity is triggered if the diastolic pressure falls below a reference value and influences heart rate, inotropy, and systemic resistance with some delay. In this way, a 0.1Hz oscillation is induced.
 
 #### Sympathetic activation
@@ -30,3 +33,13 @@ $P_n = (\gamma I_n + P_0)(1+ \varepsilon Symp_n) + w_P + A_{\rho}^P\sin(2\pi f_{
 with $\varepsilon$ the sympathetic 'force' on $P$ (inotropy by symathetics and respiratory BP modulation)
 \
 The next systole is determined by $S_{n+1} = D_n + P_n$ 
+
+## Usage
+
+```@docs
+KaremakerModel
+```
+
+```@docs
+predict(::KaremakerModel, ::Int)
+```

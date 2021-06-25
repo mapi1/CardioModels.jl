@@ -143,11 +143,13 @@ end
 """
     predict!(model::DeBoerModel, n::Int; burnIn::Int = 0) 
 
+Updates the state of the state of the model with the last predicted values. 
 Predicts 'N' values of the cardiovascular variables for the respective model and updates its state. With 'burnIn' a certain number af values can be dropped in the beginning.
+
     
 # Examples
 ```julia
- julia> S, D, I, T, ρ = predict(model, 100) 
+ julia> S, D, I, T, ρ = predict!(model, 100) 
  (S = [...], D = [...], I = [...], T = [...], ρ = [...]) 
  julia> model.hasState
  true   
