@@ -1,4 +1,5 @@
 # CardioModels
+Cardiorespiratory models as used in my thesis.
 
 ## Notation
 The following convention is used for cardiovascular variables:

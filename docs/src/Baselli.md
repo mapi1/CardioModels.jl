@@ -23,7 +23,7 @@ BaselliModel
 ```
 The model can be plotted:
 ```@setup 1
-using Plots, CardioModels
+using Plots, CardioModels, StatsPlots
 ```
 
 ```@example 1
