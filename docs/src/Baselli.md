@@ -5,4 +5,11 @@ $S_n = G_{S S}(z) S_n \quad + \quad G_{SI}(z)I_n \quad  + \quad G_{S\rho}(z) \rh
 $I_n = G_{IS}(z)S_n \quad  + \hspace{40mm}  G_{I\rho}(z) \rho_n \quad  + \quad  M_{I}(z) w_{I}$
 $\rho_n = \hspace{104mm}M_{\rho}(z) w_{\rho}$
 
+$$
+\begin{aligned}
+S_n &= G_{SS}(z)S_n \quad + \quad G_{SI}(z)I_n \quad  + \quad G_{S\rho}(z) \rho_n  \quad  + \quad  M_{S}(z) w_{S} \\
+I_n &= G_{IS}(z)S_n \quad  + \hspace{29mm}  G_{I\rho}(z) \rho_n \quad  + \quad  M_{I}(z) w_{I}\\
+\rho_n &= \hspace{76mm}M_{\rho}(z) w_{\rho}
+\end{aligned}
+$$
 It can be identified from data as an ARXAR-model using the generalized least squares method.

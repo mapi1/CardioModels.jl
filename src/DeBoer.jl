@@ -141,7 +141,7 @@ end
 
 # Statefull predict function
 """
-    predict(model::DeBoerModel, n::Int; burnIn::Int = 0) 
+    predict!(model::DeBoerModel, n::Int; burnIn::Int = 0) 
 
 Predicts 'N' values of the cardiovascular variables for the respective model and updates its state. With 'burnIn' a certain number af values can be dropped in the beginning.
     

@@ -1,6 +1,8 @@
 # DeBoer Model
+DeBoer, R. W., Karemaker, J. M., & Strackee, J. (1987). Hemodynamic fluctuations and baroreflex sensitivity in humans: a beat-to-beat model. American Journal of Physiology-Heart and Circulatory Physiology, 253(3), H680-H689. ([DOI][deb87])
 
-The following equations manifest the model:
+[deb87]: https://doi.org/10.1152/ajpheart.1987.253.3.H680
+## Theory
 
 #### Effective pressure:
 The systolic pressure is transformed to be in accordance with the sigmoid-shaped activation curve of the baroreflex. The constant $S_0$ defines the working point.
@@ -33,10 +35,16 @@ The next beat is calculated through the standard relation:
 $S_{n+1} = P_{n} + D_{n}$
 
 
+## Usage
+
 ```@docs
 DeBoerModel
 ```
 
 ```@docs
 predict(::DeBoerModel, ::Int)
+```
+
+```@docs
+predict!(::DeBoerModel, ::Int)
 ```

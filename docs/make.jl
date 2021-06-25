@@ -7,9 +7,9 @@ makedocs(
     sitename = "CardioModels.jl",
     pages = [
         "General" => "index.md",
-        "DeBoer" => "DeBeor.md",
+        "DeBoer" => "DeBoer.md",
         "Karemaker" => "Karemaker.md",
-        "Baselli" => "Baselli.md"
+        "Baselli" => "Baselli.md",
     ]
     # strict = true,
     # clean = true,
