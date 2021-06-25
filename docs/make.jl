@@ -5,7 +5,12 @@ makedocs(
     format = Documenter.HTML(; prettyurls = get(ENV, "CI", nothing) == "true"),
     authors = "Marius Pille",
     sitename = "CardioModels.jl",
-    pages = Any["index.md"]
+    pages = [
+        "General" => "index.md",
+        "DeBoer" => "DeBeor.md",
+        "Karemaker" => "Karemaker.md",
+        "Baselli" => "Baselli.md"
+    ]
     # strict = true,
     # clean = true,
     # checkdocs = :exports,
