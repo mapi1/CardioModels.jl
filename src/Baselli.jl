@@ -203,7 +203,6 @@ end
         mag, phase, w = bode(model.G_SI, w)
         title := "G_SI"
         subplot := x+5
-        xguide := "f [c/b]"
         (w./2π), plotphase ? vec(phase) : round.(vec(mag), digits = 2)
     end
     
