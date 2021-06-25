@@ -21,17 +21,15 @@ It can be identified from data as an ARXAR-model using the generalized least squ
 ```@docs
 BaselliModel
 ```
-The model can be plotted:
+The model can be plotted using Plots.jl:
 ```@setup 1
 using Plots, CardioModels, StatsPlots
 ```
 
 ```@example 1
-model = getModel(1)
-plot(model)
+plot(getModel(1), lab = "")
 ```
 
-Predefined models can be obtained with:
 ```@docs
 getModel
 ```

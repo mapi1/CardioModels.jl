@@ -164,51 +164,45 @@ end
 @recipe function f(model::BaselliModel; plotphase = false)
     w = range(0, stop = π, length = 256)
     
-    layout := (4,3)
+    layout := (3,4)
     # layout := @layout [_ G_IS R_Iρ MI
      #G_SS G_SI R_Sρ MS
      #wS wI wρ Mρ]
     
-    @series begin
-        mag, phase, w = bode(model.Mρ, w)
-        title := "Mρ"
-        subplot := 11
-        (w./2π), plotphase ? vec(phase) : vec(mag)
-    end
+    x = 1
     
     @series begin
         mag, phase, w = bode(model.G_IS, w)
         title := "G_IS"
-        subplot := 1
+        subplot := x+1
         (w./2π), plotphase ? vec(phase) : vec(mag)
     end
     
     @series begin
         mag, phase, w = bode(model.R_Iρ, w)
         title := "R_Iρ"
-        subplot := 2
+        subplot := x+2
         (w./2π), plotphase ? vec(phase) : vec(mag)
     end
     
     @series begin
         mag, phase, w = bode(model.MI, w)
         title := "MI"
-        subplot := 3
+        subplot := x+3
         (w./2π), plotphase ? vec(phase) : vec(mag)
     end
     
     @series begin
         mag, phase, w = bode(model.G_SS, w)
         title := "G_SS"
-        subplot := 4
-        xguide := "f [c/b]"
+        subplot := x+4
         (w./2π), plotphase ? vec(phase) : vec(mag)
     end
     
     @series begin
         mag, phase, w = bode(model.G_SI, w)
         title := "G_SI"
-        subplot := 5
+        subplot := x+5
         xguide := "f [c/b]"
         (w./2π), plotphase ? vec(phase) : round.(vec(mag), digits = 2)
     end
@@ -216,32 +210,36 @@ end
     @series begin
         mag, phase, w = bode(model.R_Sρ, w)
         title := "R_Sρ"
-        subplot := 6
-        xguide := "f [c/b]"
+        subplot := x+6
         (w./2π), plotphase ? vec(phase) : vec(mag)
     end
     
     @series begin
         mag, phase, w = bode(model.MS, w)
         title := "MS"
-        subplot := 7
-        xguide := "f [c/b]"
+        subplot := x+7
         (w./2π), plotphase ? vec(phase) : vec(mag)
     end
     
     @series begin
         title := "wS"
-        subplot := 8
+        subplot := x+8
         model.wS
     end
     @series begin
         title := "wI"
-        subplot := 9
+        subplot := x+9
         model.wI
     end
     @series begin
         title := "wρ"
-        subplot := 10
+        subplot := x+10
         model.wρ
+    end
+    @series begin
+        mag, phase, w = bode(model.Mρ, w)
+        title := "Mρ"
+        subplot := x+11
+        (w./2π), plotphase ? vec(phase) : vec(mag)
     end
 end
