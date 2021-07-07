@@ -23,7 +23,7 @@ Example notebooks using [Pluto.jl](https://github.com/fonsp/Pluto.jl) are provid
 using Pkg; Pkg.activate("."); Pkg.instantiate()
 ```
 
-all required packages will be installed.
+all required packages will be installed. From Pluto.jl version 0.15 onward this is no longer necessary, all packages will be installed by the notebook package mangager.
 
 
 
